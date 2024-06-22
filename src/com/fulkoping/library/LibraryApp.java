@@ -9,7 +9,6 @@ import com.fulkoping.library.model.Users;
 import com.fulkoping.library.gui.Login;
 import com.fulkoping.library.gui.Register;
 import com.fulkoping.library.utils.ActivityLog;
-import com.fulkoping.library.Database;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -20,37 +19,23 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.application.Application;
 
-public abstract class LibraryApp {
+public class LibraryApp extends Application {
 
     private static UsersDAO usersDAO = new UsersDAO();
     private static BooksDAO booksDAO = new BooksDAO();
     private static LoansDAO loansDAO = new LoansDAO();
 
-    public abstract void start(Stage primaryStage);
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Fulköpings Bibliotek");
+        primaryStage.setScene(getHomePageScene(primaryStage));
+        primaryStage.show();
+    }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Välkommen till Fulköpings bibliotek!");
-
-        while (true) {
-            System.out.println("1. Logga in");
-            System.out.println("2. Registrera");
-            System.out.println("3. Avsluta");
-            System.out.print("Välj ett alternativ: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-
-            if (choice == 1) {
-                login(scanner);
-            } else if (choice == 2) {
-                register(scanner);
-            } else if (choice == 3) {
-                break;
-            } else {
-                System.out.println("Ogiltigt alternativ.");
-            }
-        }
+        launch(args);
     }
 
     public static Scene getHomePageScene(Stage primaryStage) {
