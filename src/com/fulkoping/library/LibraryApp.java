@@ -3,12 +3,14 @@ package com.fulkoping.library;
 import com.fulkoping.library.dao.BooksDAO;
 import com.fulkoping.library.dao.LoansDAO;
 import com.fulkoping.library.dao.UsersDAO;
+import com.fulkoping.library.gui.GUI;
 import com.fulkoping.library.model.Books;
 import com.fulkoping.library.model.Loans;
 import com.fulkoping.library.model.Users;
 import com.fulkoping.library.gui.Login;
 import com.fulkoping.library.gui.Register;
 import com.fulkoping.library.utils.ActivityLog;
+import com.fulkoping.library.utils.Hashing; // Kontrollera att Hashing klassen importeras korrekt
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -21,21 +23,18 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.application.Application;
 
-public class LibraryApp extends Application {
+public class LibraryApp {
 
     private static UsersDAO usersDAO = new UsersDAO();
     private static BooksDAO booksDAO = new BooksDAO();
     private static LoansDAO loansDAO = new LoansDAO();
 
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Fulköpings Bibliotek");
-        primaryStage.setScene(getHomePageScene(primaryStage));
-        primaryStage.show();
+    public static void main(String[] args) {
+        launchGUI(args);
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public static void launchGUI(String[] args) {
+        Application.launch(GUI.class, args);
     }
 
     public static Scene getHomePageScene(Stage primaryStage) {
@@ -58,7 +57,7 @@ public class LibraryApp extends Application {
 
         try {
             Users users = usersDAO.getUserByUsername(username);
-            if (users != null && users.getPassword().equals(password)) {
+            if (users != null && Hashing.verify(password, users.getPassword())) {
                 System.out.println("Inloggning lyckades!");
                 try (Connection conn = Database.getConnection()) {
                     ActivityLog.log(conn, String.valueOf(users.getId()), "Användare inloggad");
@@ -82,7 +81,8 @@ public class LibraryApp extends Application {
         System.out.print("E-post: ");
         String email = scanner.nextLine();
 
-        Users users = new Users(0, username, password, email, null);
+        String hashedPassword = Hashing.encrypt(password);
+        Users users = new Users(0, username, hashedPassword, email, null);
         try {
             usersDAO.addUser(users);
             System.out.println("Registrering lyckades!");

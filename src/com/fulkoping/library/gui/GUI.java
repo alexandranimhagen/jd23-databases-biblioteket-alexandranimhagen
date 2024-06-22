@@ -1,9 +1,10 @@
 package com.fulkoping.library.gui;
 
 import com.fulkoping.library.LibraryApp;
+import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class GUI extends LibraryApp {
+public class GUI extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Fulköpings Bibliotek");
@@ -15,6 +16,6 @@ public class GUI extends LibraryApp {
         launch(args);
     }
 
-    private static void launch(String[] args) {
+    public static void launch(String[] args) {
     }
 }

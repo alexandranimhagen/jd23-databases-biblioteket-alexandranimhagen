@@ -24,7 +24,8 @@ public class Login {
         Button registerButton = new Button("Registrera");
         Button backButton = new Button("Tillbaka");
 
-        loginButton.setOnAction(e -> handleLogin(userField.getText(), passField.getText()));
+        loginButton.setOnAction(e -> handleLogin(userField.getText(), passField.getgit add .
+                Text()));
         registerButton.setOnAction(e -> primaryStage.setScene(Register.getRegisterScene(primaryStage)));
         backButton.setOnAction(e -> primaryStage.setScene(LibraryApp.getHomePageScene(primaryStage)));
 
