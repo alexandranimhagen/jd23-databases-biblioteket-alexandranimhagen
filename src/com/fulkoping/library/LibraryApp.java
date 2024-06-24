@@ -23,18 +23,21 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.application.Application;
 
-public class LibraryApp {
+public class LibraryApp extends Application {
 
     private static UsersDAO usersDAO = new UsersDAO();
     private static BooksDAO booksDAO = new BooksDAO();
     private static LoansDAO loansDAO = new LoansDAO();
 
     public static void main(String[] args) {
-        launchGUI(args);
+        launch(args);
     }
 
-    public static void launchGUI(String[] args) {
-        Application.launch(GUI.class, args);
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Fulköpings Bibliotek");
+        primaryStage.setScene(getHomePageScene(primaryStage));
+        primaryStage.show();
     }
 
     public static Scene getHomePageScene(Stage primaryStage) {
@@ -49,7 +52,7 @@ public class LibraryApp {
         return new Scene(vbox, 300, 200);
     }
 
-    public static Scene getUserMenuScene(Stage primaryStage) {
+    public static Scene getUserMenuScene(Stage primaryStage, Users user) {
         Label menuLabel = new Label("Användarmeny:");
         Button searchBooksButton = new Button("Sök efter böcker");
         Button loanBookButton = new Button("Låna bok");
@@ -57,87 +60,14 @@ public class LibraryApp {
         Button showLoansButton = new Button("Visa mina lån");
         Button logoutButton = new Button("Logga ut");
 
-        searchBooksButton.setOnAction(e -> searchBooks(new Scanner(System.in)));  // Uppdatera dessa metoder om de ska vara UI-metoder
-        loanBookButton.setOnAction(e -> loanBook(new Scanner(System.in), null));  // Uppdatera dessa metoder om de ska vara UI-metoder
-        returnBookButton.setOnAction(e -> returnBook(new Scanner(System.in), null));  // Uppdatera dessa metoder om de ska vara UI-metoder
-        showLoansButton.setOnAction(e -> showLoans(null));  // Uppdatera dessa metoder om de ska vara UI-metoder
+        searchBooksButton.setOnAction(e -> searchBooks(new Scanner(System.in)));
+        loanBookButton.setOnAction(e -> loanBook(new Scanner(System.in), user));
+        returnBookButton.setOnAction(e -> returnBook(new Scanner(System.in), user));
+        showLoansButton.setOnAction(e -> showLoans(user));
         logoutButton.setOnAction(e -> primaryStage.setScene(getHomePageScene(primaryStage)));
 
         VBox vbox = new VBox(10, menuLabel, searchBooksButton, loanBookButton, returnBookButton, showLoansButton, logoutButton);
         return new Scene(vbox, 300, 250);
-    }
-
-    private static void login(Scanner scanner) {
-        System.out.print("Användarnamn: ");
-        String username = scanner.nextLine();
-        System.out.print("Lösenord: ");
-        String password = scanner.nextLine();
-
-        try {
-            Users users = usersDAO.getUserByUsername(username);
-            if (users != null && Hashing.verify(password, users.getPassword())) {
-                System.out.println("Inloggning lyckades!");
-                try (Connection conn = Database.getConnection()) {
-                    ActivityLog.log(conn, String.valueOf(users.getId()), "Användare inloggad");
-                }
-                // Om det ska vara UI, anropa userMenu här med primaryStage
-                // userMenu(primaryStage, users);
-            } else {
-                System.out.println("Fel användarnamn eller lösenord.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void register(Scanner scanner) {
-        System.out.print("Användarnamn: ");
-        String username = scanner.nextLine();
-        System.out.print("Lösenord: ");
-        String password = scanner.nextLine();
-        System.out.print("Namn: ");
-        String name = scanner.nextLine();
-        System.out.print("E-post: ");
-        String email = scanner.nextLine();
-
-        String hashedPassword = Hashing.encrypt(password);
-        Users users = new Users(0, username, hashedPassword, email, null);
-        try {
-            usersDAO.addUser(users);
-            System.out.println("Registrering lyckades!");
-            try (Connection conn = Database.getConnection()) {
-                ActivityLog.log(conn, String.valueOf(users.getId()), "Användare registrerad");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void userMenu(Scanner scanner, Users users) {
-        while (true) {
-            System.out.println("1. Sök efter böcker");
-            System.out.println("2. Låna bok");
-            System.out.println("3. Lämna tillbaka bok");
-            System.out.println("4. Visa mina lån");
-            System.out.println("5. Logga ut");
-            System.out.print("Välj ett alternativ: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-
-            if (choice == 1) {
-                searchBooks(scanner);
-            } else if (choice == 2) {
-                loanBook(scanner, users);
-            } else if (choice == 3) {
-                returnBook(scanner, users);
-            } else if (choice == 4) {
-                showLoans(users);
-            } else if (choice == 5) {
-                break;
-            } else {
-                System.out.println("Ogiltigt alternativ.");
-            }
-        }
     }
 
     private static void searchBooks(Scanner scanner) {

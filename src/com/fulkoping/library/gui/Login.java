@@ -35,13 +35,9 @@ public class Login {
     private static void handleLogin(Stage primaryStage, String username, String password) {
         try {
             Users user = usersDAO.getUserByUsername(username);
-            if (user != null) {
-                if (Hashing.verify(password, user.getPassword())) {
-                    System.out.println("Inloggning lyckades!");
-                    primaryStage.setScene(LibraryApp.getUserMenuScene(primaryStage, user));
-                } else {
-                    System.out.println("Fel användarnamn eller lösenord.");
-                }
+            if (user != null && Hashing.verify(password, user.getPassword())) {
+                System.out.println("Inloggning lyckades!");
+                primaryStage.setScene(LibraryApp.getUserMenuScene(primaryStage, user));
             } else {
                 System.out.println("Fel användarnamn eller lösenord.");
             }
@@ -49,4 +45,5 @@ public class Login {
             System.out.println("Inloggning misslyckades: " + e.getMessage());
         }
     }
+
 }
