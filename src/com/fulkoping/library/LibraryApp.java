@@ -49,15 +49,22 @@ public class LibraryApp {
         return new Scene(vbox, 300, 200);
     }
 
-    public static Scene getUserMenuScene(Stage primaryStage, Users user) {
-        Label welcomeLabel = new Label("Välkommen " + user.getUsername() + "!");
+    public static Scene getUserMenuScene(Stage primaryStage) {
+        Label menuLabel = new Label("Användarmeny:");
         Button searchBooksButton = new Button("Sök efter böcker");
         Button loanBookButton = new Button("Låna bok");
         Button returnBookButton = new Button("Lämna tillbaka bok");
         Button showLoansButton = new Button("Visa mina lån");
         Button logoutButton = new Button("Logga ut");
-        VBox vbox = new VBox(10, welcomeLabel, searchBooksButton, loanBookButton, returnBookButton, showLoansButton, logoutButton);
-        return new Scene(vbox, 400, 300);
+
+        searchBooksButton.setOnAction(e -> searchBooks(new Scanner(System.in)));  // Uppdatera dessa metoder om de ska vara UI-metoder
+        loanBookButton.setOnAction(e -> loanBook(new Scanner(System.in), null));  // Uppdatera dessa metoder om de ska vara UI-metoder
+        returnBookButton.setOnAction(e -> returnBook(new Scanner(System.in), null));  // Uppdatera dessa metoder om de ska vara UI-metoder
+        showLoansButton.setOnAction(e -> showLoans(null));  // Uppdatera dessa metoder om de ska vara UI-metoder
+        logoutButton.setOnAction(e -> primaryStage.setScene(getHomePageScene(primaryStage)));
+
+        VBox vbox = new VBox(10, menuLabel, searchBooksButton, loanBookButton, returnBookButton, showLoansButton, logoutButton);
+        return new Scene(vbox, 300, 250);
     }
 
     private static void login(Scanner scanner) {
@@ -73,7 +80,8 @@ public class LibraryApp {
                 try (Connection conn = Database.getConnection()) {
                     ActivityLog.log(conn, String.valueOf(users.getId()), "Användare inloggad");
                 }
-                userMenu(scanner, users);
+                // Om det ska vara UI, anropa userMenu här med primaryStage
+                // userMenu(primaryStage, users);
             } else {
                 System.out.println("Fel användarnamn eller lösenord.");
             }
