@@ -24,8 +24,7 @@ public class Login {
         Button registerButton = new Button("Registrera");
         Button backButton = new Button("Tillbaka");
 
-        loginButton.setOnAction(e -> handleLogin(userField.getText(), passField.getgit add .
-                Text()));
+        loginButton.setOnAction(e -> handleLogin(primaryStage, userField.getText(), passField.getText()));
         registerButton.setOnAction(e -> primaryStage.setScene(Register.getRegisterScene(primaryStage)));
         backButton.setOnAction(e -> primaryStage.setScene(LibraryApp.getHomePageScene(primaryStage)));
 
@@ -33,12 +32,13 @@ public class Login {
         return new Scene(vbox, 300, 250);
     }
 
-    private static void handleLogin(String username, String password) {
+    private static void handleLogin(Stage primaryStage, String username, String password) {
         try {
             Users user = usersDAO.getUserByUsername(username);
             if (user != null) {
                 if (Hashing.verify(password, user.getPassword())) {
-                    Systcd C:\Users\Alex\IdeaProjects\jd23-databases-biblioteket-alexandranimhagenem.out.println("Inloggning lyckades!");
+                    System.out.println("Inloggning lyckades!");
+                    primaryStage.setScene(LibraryApp.getUserMenuScene(primaryStage, user));
                 } else {
                     System.out.println("Fel användarnamn eller lösenord.");
                 }

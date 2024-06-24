@@ -10,7 +10,7 @@ import com.fulkoping.library.model.Users;
 import com.fulkoping.library.gui.Login;
 import com.fulkoping.library.gui.Register;
 import com.fulkoping.library.utils.ActivityLog;
-import com.fulkoping.library.utils.Hashing; // Kontrollera att Hashing klassen importeras korrekt
+import com.fulkoping.library.utils.Hashing;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -47,6 +47,17 @@ public class LibraryApp {
 
         VBox vbox = new VBox(10, welcomeLabel, loginButton, registerButton);
         return new Scene(vbox, 300, 200);
+    }
+
+    public static Scene getUserMenuScene(Stage primaryStage, Users user) {
+        Label welcomeLabel = new Label("Välkommen " + user.getUsername() + "!");
+        Button searchBooksButton = new Button("Sök efter böcker");
+        Button loanBookButton = new Button("Låna bok");
+        Button returnBookButton = new Button("Lämna tillbaka bok");
+        Button showLoansButton = new Button("Visa mina lån");
+        Button logoutButton = new Button("Logga ut");
+        VBox vbox = new VBox(10, welcomeLabel, searchBooksButton, loanBookButton, returnBookButton, showLoansButton, logoutButton);
+        return new Scene(vbox, 400, 300);
     }
 
     private static void login(Scanner scanner) {
