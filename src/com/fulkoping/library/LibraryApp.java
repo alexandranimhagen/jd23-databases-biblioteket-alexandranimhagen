@@ -16,6 +16,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
+
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -37,6 +39,7 @@ public class LibraryApp extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Fulköpings Bibliotek");
         primaryStage.setScene(getHomePageScene(primaryStage));
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
@@ -49,10 +52,11 @@ public class LibraryApp extends Application {
         registerButton.setOnAction(e -> primaryStage.setScene(Register.getRegisterScene(primaryStage)));
 
         VBox vbox = new VBox(10, welcomeLabel, loginButton, registerButton);
-        return new Scene(vbox, 300, 200);
+        return new Scene(vbox, 800, 600);
     }
 
     public static Scene getUserMenuScene(Stage primaryStage, Users user) {
+        Label userLabel = new Label("Välkommen " + user.getUsername());
         Label menuLabel = new Label("Användarmeny:");
         Button searchBooksButton = new Button("Sök efter böcker");
         Button loanBookButton = new Button("Låna bok");
@@ -66,8 +70,8 @@ public class LibraryApp extends Application {
         showLoansButton.setOnAction(e -> showLoans(user));
         logoutButton.setOnAction(e -> primaryStage.setScene(getHomePageScene(primaryStage)));
 
-        VBox vbox = new VBox(10, menuLabel, searchBooksButton, loanBookButton, returnBookButton, showLoansButton, logoutButton);
-        return new Scene(vbox, 300, 250);
+        VBox vbox = new VBox(10, userLabel, menuLabel, searchBooksButton, loanBookButton, returnBookButton, showLoansButton, logoutButton);
+        return new Scene(vbox, 800, 600); // Ställ in en startstorlek på scenen
     }
 
     private static void searchBooks(Scanner scanner) {
