@@ -7,20 +7,19 @@ import java.sql.SQLException;
 
 public class ActivityLog {
 
-    // Metod för att skriva in aktiviteter från användarna
-    public static void log(Connection conn, String usersId, String message) {
-        String query = "INSERT INTO ActivityLog (usersId, message) VALUES (?, ?)";
+
+    public static void log(Connection conn, String userId, String action) {
+        String query = "INSERT INTO activitylog (user_id, action) VALUES (?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, usersId);
-            ps.setString(2, message);
+            ps.setString(1, userId);
+            ps.setString(2, action);
             ps.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
-    // Metod att ta ut userId från email
-    public static int getUsersIdFromEmail(Connection connection, String email) throws SQLException {
+    public static int getUserIdFromEmail(Connection connection, String email) throws SQLException {
         String query = "SELECT id FROM users WHERE email = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, email);

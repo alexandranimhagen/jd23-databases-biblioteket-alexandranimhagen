@@ -5,10 +5,7 @@ import com.fulkoping.library.dao.UsersDAO;
 import com.fulkoping.library.model.Users;
 import com.fulkoping.library.utils.Hashing;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -29,7 +26,7 @@ public class Login {
         backButton.setOnAction(e -> primaryStage.setScene(LibraryApp.getHomePageScene(primaryStage)));
 
         VBox vbox = new VBox(10, userLabel, userField, passLabel, passField, loginButton, registerButton, backButton);
-        return new Scene(vbox, 300, 250);
+        return LibraryApp.getStyledScene(vbox);
     }
 
     private static void handleLogin(Stage primaryStage, String username, String password) {
@@ -40,10 +37,11 @@ public class Login {
                 primaryStage.setScene(LibraryApp.getUserMenuScene(primaryStage, user));
             } else {
                 System.out.println("Fel användarnamn eller lösenord.");
+                LibraryApp.showAlert(Alert.AlertType.ERROR, primaryStage, "Fel användarnamn eller lösenord.", null);
             }
         } catch (Exception e) {
             System.out.println("Inloggning misslyckades: " + e.getMessage());
+            LibraryApp.showAlert(Alert.AlertType.ERROR, primaryStage, "Inloggning misslyckades: " + e.getMessage(), null);
         }
     }
-
 }

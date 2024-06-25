@@ -7,10 +7,10 @@ public class Books {
     private boolean available;
 
     public Books(int id, String title, String author, boolean available) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.available = available;
+        this.id = this.id;
+        this.title = this.title;
+        this.author = this.author;
+        this.available = this.available;
     }
 
     // Getters and setters
@@ -44,5 +44,8 @@ public class Books {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public void setGenre(String genre) {
     }
 }

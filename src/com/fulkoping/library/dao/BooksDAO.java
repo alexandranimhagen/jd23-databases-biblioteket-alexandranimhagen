@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BooksDAO {
+
     public List<Books> searchBooks(String keyword) throws SQLException {
         String query = "SELECT * FROM books WHERE title LIKE ? OR author LIKE ?";
         try (Connection conn = Database.getConnection();
